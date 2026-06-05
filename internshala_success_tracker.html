@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Internshala – Application Success Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --blue: #006BFF;
+    --blue-dark: #0050CC;
+    --blue-mid: #3D8EFF;
+    --blue-light: #E8F1FF;
+    --blue-xlight: #F0F6FF;
+    --teal: #00C9A7;
+    --orange: #FF6B35;
+    --purple: #7C3AED;
+    --yellow: #FBBF24;
+    --red: #EF4444;
+    --green: #10B981;
+    --gray-900: #0F172A;
+    --gray-700: #334155;
+    --gray-500: #64748B;
+    --gray-300: #CBD5E1;
+    --gray-100: #F1F5F9;
+    --gray-50: #F8FAFC;
+    --white: #FFFFFF;
+    --shadow: 0 4px 24px rgba(0,107,255,0.10);
+    --shadow-sm: 0 2px 8px rgba(0,107,255,0.08);
+    --radius: 16px;
+    --font: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: #EEF4FF;
+    min-height: 100vh;
+    width: 1440px;
+    overflow-x: hidden;
+  }
+
+  /* ─── TOP NAV ─── */
+  .topnav {
+    background: var(--white);
+    border-bottom: 1.5px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    padding: 0 40px;
+    height: 64px;
+    gap: 32px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--blue);
+    letter-spacing: -0.5px;
+  }
+  .logo-dot { color: var(--orange); }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+  }
+  .nav-link {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .nav-link.active {
+    background: var(--blue-light);
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .nav-bell {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+  }
+  .nav-bell::after {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--orange);
+    border-radius: 50%;
+    border: 2px solid white;
+    position: absolute;
+    top: 5px; right: 5px;
+  }
+  .nav-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white;
+    cursor: pointer;
+  }
+
+  /* ─── LAYOUT ─── */
+  .page { display: flex; height: calc(100vh - 64px); }
+
+  /* ─── SIDEBAR ─── */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--white);
+    border-right: 1.5px solid var(--gray-100);
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow-y: auto;
+  }
+  .sidebar-section {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--gray-300);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 16px 12px 8px;
+    margin-top: 8px;
+  }
+  .sidebar-section:first-child { margin-top: 0; padding-top: 4px; }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .sidebar-item.active {
+    background: var(--blue-light);
+    color: var(--blue);
+    font-weight: 600;
+  }
+  .sidebar-item .s-icon { font-size: 18px; width: 22px; text-align: center; }
+  .sidebar-item .s-badge {
+    margin-left: auto;
+    background: var(--orange);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
+  }
+
+  /* ─── MAIN ─── */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    background: #EEF4FF;
+  }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .page-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+  }
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-top: 4px;
+    font-weight: 400;
+  }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font);
+    border: none;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+    box-shadow: 0 4px 12px rgba(0,107,255,0.30);
+  }
+  .btn-outline {
+    background: white;
+    color: var(--blue);
+    border: 1.5px solid var(--blue-mid);
+  }
+
+  /* ─── AI INSIGHT BANNER ─── */
+  .ai-banner {
+    background: linear-gradient(135deg, #006BFF 0%, #7C3AED 100%);
+    border-radius: var(--radius);
+    padding: 22px 28px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .ai-banner::before {
+    content: '';
+    position: absolute;
+    right: -40px; top: -40px;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+  .ai-banner::after {
+    content: '';
+    position: absolute;
+    right: 60px; bottom: -60px;
+    width: 140px; height: 140px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+  .ai-icon-wrap {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,0.18);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .ai-text { flex: 1; }
+  .ai-text strong { font-size: 16px; font-weight: 700; display: block; margin-bottom: 4px; }
+  .ai-text span { font-size: 14px; opacity: 0.88; line-height: 1.5; }
+  .ai-cta {
+    background: white;
+    color: var(--blue);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ─── SCORE CARDS ROW ─── */
+  .score-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .score-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 22px 20px 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    border: 1.5px solid transparent;
+    transition: all 0.2s;
+  }
+  .score-card.main-score { border-color: var(--blue); }
+  .score-card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .score-label { font-size: 13px; font-weight: 600; color: var(--gray-500); }
+  .score-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .score-value {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1;
+  }
+  .score-bar-wrap {
+    height: 6px;
+    background: var(--gray-100);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .score-bar { height: 100%; border-radius: 99px; transition: width 0.6s; }
+  .score-delta {
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .delta-up { color: var(--green); }
+  .delta-down { color: var(--red); }
+
+  /* ─── MIDDLE SECTION ─── */
+  .mid-row { display: grid; grid-template-columns: 1fr 380px; gap: 20px; }
+
+  /* ─── CHART CARD ─── */
+  .card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 22px 0;
+  }
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .card-action {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--blue);
+    cursor: pointer;
+  }
+  .card-body { padding: 16px 22px 20px; }
+
+  /* ─── APPLICATION TABLE ─── */
+  .app-table { width: 100%; border-collapse: collapse; }
+  .app-table th {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1.5px solid var(--gray-100);
+    background: var(--gray-50);
+  }
+  .app-table td {
+    padding: 12px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--gray-100);
+    vertical-align: middle;
+  }
+  .app-table tr:last-child td { border-bottom: none; }
+  .company-cell { display: flex; align-items: center; gap: 10px; }
+  .company-logo {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    flex-shrink: 0;
+    border: 1px solid var(--gray-100);
+  }
+  .company-name { font-weight: 600; color: var(--gray-900); font-size: 14px; }
+  .company-role { font-size: 12px; color: var(--gray-500); margin-top: 1px; }
+  .match-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .match-high { background: #DCFCE7; color: #166534; }
+  .match-mid { background: #FEF9C3; color: #854D0E; }
+  .match-low { background: #FEE2E2; color: #991B1B; }
+  .status-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .s-shortlisted { background: #E0F2FE; color: #0369A1; }
+  .s-applied { background: var(--gray-100); color: var(--gray-500); }
+  .s-rejected { background: #FEE2E2; color: #991B1B; }
+  .s-inprogress { background: #FEF3C7; color: #92400E; }
+
+  /* ─── MATCH SCORE MINI BAR ─── */
+  .mini-bar-wrap { display: flex; align-items: center; gap: 8px; }
+  .mini-bar-bg { flex: 1; height: 5px; background: var(--gray-100); border-radius: 99px; }
+  .mini-bar-fill { height: 100%; border-radius: 99px; }
+  .mini-bar-val { font-size: 12px; font-weight: 700; color: var(--gray-700); width: 30px; text-align: right; }
+
+  /* ─── SKILL GAP CARD ─── */
+  .skill-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .skill-item:last-child { border-bottom: none; }
+  .skill-name { font-size: 14px; font-weight: 600; color: var(--gray-900); flex: 1; }
+  .skill-level {
+    display: flex;
+    gap: 3px;
+  }
+  .skill-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .skill-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 99px;
+  }
+  .tag-critical { background: #FEE2E2; color: #991B1B; }
+  .tag-improve { background: #FEF3C7; color: #92400E; }
+  .tag-good { background: #DCFCE7; color: #166534; }
+
+  /* ─── BOTTOM ROW ─── */
+  .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* ─── RECOMMENDATIONS ─── */
+  .rec-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .rec-item:last-child { border-bottom: none; }
+  .rec-logo {
+    width: 42px; height: 42px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    border: 1.5px solid var(--gray-100);
+  }
+  .rec-info { flex: 1; }
+  .rec-title { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .rec-meta { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+  .rec-match {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 99px;
+    background: var(--blue-light);
+    color: var(--blue);
+    white-space: nowrap;
+  }
+
+  /* ─── COURSES ─── */
+  .course-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+  }
+  .course-item:last-child { border-bottom: none; }
+  .course-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .course-title { font-size: 14px; font-weight: 600; color: var(--gray-900); }
+  .course-meta { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+  .course-enroll {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    margin-top: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  /* ─── SVG CHART ─── */
+  .chart-area { padding: 10px 22px 20px; }
+
+  /* ─── RING ─── */
+  .ring-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 22px;
+    gap: 16px;
+  }
+  .ring-labels { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  .ring-label-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--gray-600); font-weight: 500; }
+  .ring-label-dot { width: 10px; height: 10px; border-radius: 50%; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">internshala<span class="logo-dot">.</span></div>
+  <div class="nav-links">
+    <div class="nav-link">Internships</div>
+    <div class="nav-link">Jobs</div>
+    <div class="nav-link">Courses</div>
+    <div class="nav-link active">My Dashboard</div>
+    <div class="nav-link">Resume</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-bell">🔔</div>
+    <div class="nav-avatar">RS</div>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">Overview</div>
+    <div class="sidebar-item active"><span class="s-icon">📊</span> Success Tracker</div>
+    <div class="sidebar-item"><span class="s-icon">📋</span> My Applications <span class="s-badge">12</span></div>
+    <div class="sidebar-item"><span class="s-icon">💾</span> Saved Internships</div>
+    <div class="sidebar-item"><span class="s-icon">📄</span> My Resume</div>
+
+    <div class="sidebar-section">AI Tools</div>
+    <div class="sidebar-item"><span class="s-icon">🧠</span> Skill Gap Analysis</div>
+    <div class="sidebar-item"><span class="s-icon">🎯</span> Recommendations</div>
+    <div class="sidebar-item"><span class="s-icon">📚</span> Suggested Courses</div>
+    <div class="sidebar-item"><span class="s-icon">✍️</span> Resume Builder</div>
+
+    <div class="sidebar-section">Account</div>
+    <div class="sidebar-item"><span class="s-icon">👤</span> Profile</div>
+    <div class="sidebar-item"><span class="s-icon">⚙️</span> Settings</div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div>
+        <div class="page-title">Application Success Tracker ✨</div>
+        <div class="page-subtitle">AI-powered insights to boost your shortlisting rate — Last updated today</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-outline">📤 Export Report</button>
+        <button class="btn btn-primary">🔄 Refresh Analysis</button>
+      </div>
+    </div>
+
+    <!-- AI INSIGHT BANNER -->
+    <div class="ai-banner">
+      <div class="ai-icon-wrap">🤖</div>
+      <div class="ai-text">
+        <strong>Your AI Insight — Action Required</strong>
+        <span>Your profile matches <strong>65%</strong> of requirements for <strong>Product Management</strong> internships. Improving SQL and Excel skills could increase your match score to <strong>85%</strong> — unlocking 3× more shortlists.</span>
+      </div>
+      <div class="ai-cta">View Action Plan →</div>
+    </div>
+
+    <!-- SCORE CARDS -->
+    <div class="score-row">
+      <div class="score-card main-score">
+        <div class="score-card-top">
+          <div class="score-label">Application Success Score</div>
+          <div class="score-icon" style="background:#E8F1FF;">📈</div>
+        </div>
+        <div class="score-value" style="color:var(--blue);">65<span style="font-size:20px;color:var(--gray-300);">/100</span></div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:65%;background:linear-gradient(90deg,var(--blue),var(--blue-mid));"></div></div>
+        <div class="score-delta delta-up">▲ +8 pts from last week</div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-top">
+          <div class="score-label">Resume Strength</div>
+          <div class="score-icon" style="background:#F0FDF4;">📄</div>
+        </div>
+        <div class="score-value" style="color:var(--green);">72<span style="font-size:20px;color:var(--gray-300);">/100</span></div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:72%;background:linear-gradient(90deg,var(--green),#34D399);"></div></div>
+        <div class="score-delta delta-up">▲ +5 pts this month</div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-top">
+          <div class="score-label">Avg. Profile Match</div>
+          <div class="score-icon" style="background:#FFF7ED;">🎯</div>
+        </div>
+        <div class="score-value" style="color:var(--orange);">58<span style="font-size:20px;color:var(--gray-300);">%</span></div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:58%;background:linear-gradient(90deg,var(--orange),#FB923C);"></div></div>
+        <div class="score-delta delta-down">▼ -2% vs PM average</div>
+      </div>
+
+      <div class="score-card">
+        <div class="score-card-top">
+          <div class="score-label">Shortlist Rate</div>
+          <div class="score-icon" style="background:#F5F3FF;">⚡</div>
+        </div>
+        <div class="score-value" style="color:var(--purple);">3<span style="font-size:20px;color:var(--gray-300);">/12</span></div>
+        <div class="score-bar-wrap"><div class="score-bar" style="width:25%;background:linear-gradient(90deg,var(--purple),#A78BFA);"></div></div>
+        <div class="score-delta delta-up">▲ Industry avg: 2/12</div>
+      </div>
+    </div>
+
+    <!-- MID SECTION -->
+    <div class="mid-row">
+
+      <!-- Applications Table -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Applications</div>
+          <div class="card-action">View All 12 →</div>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="app-table">
+            <thead>
+              <tr>
+                <th>Company & Role</th>
+                <th>Match Score</th>
+                <th>Status</th>
+                <th>Applied</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="company-cell">
+                    <div class="company-logo" style="background:#FFF0E6;">G</div>
+                    <div>
+                      <div class="company-name">Google</div>
+                      <div class="company-role">Product Management Intern</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:78%;background:var(--green);"></div></div>
+                    <div class="mini-bar-val">78%</div>
+                  </div>
+                </td>
+                <td><span class="status-badge s-shortlisted">✓ Shortlisted</span></td>
+                <td style="color:var(--gray-500);font-size:13px;">2 days ago</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="company-cell">
+                    <div class="company-logo" style="background:#E8F4FD;">F</div>
+                    <div>
+                      <div class="company-name">Flipkart</div>
+                      <div class="company-role">Business Analyst Intern</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:65%;background:var(--blue);"></div></div>
+                    <div class="mini-bar-val">65%</div>
+                  </div>
+                </td>
+                <td><span class="status-badge s-inprogress">⏳ In Review</span></td>
+                <td style="color:var(--gray-500);font-size:13px;">5 days ago</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="company-cell">
+                    <div class="company-logo" style="background:#FFF0F0;">S</div>
+                    <div>
+                      <div class="company-name">Swiggy</div>
+                      <div class="company-role">Marketing Intern</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:42%;background:var(--orange);"></div></div>
+                    <div class="mini-bar-val">42%</div>
+                  </div>
+                </td>
+                <td><span class="status-badge s-rejected">✗ Not Selected</span></td>
+                <td style="color:var(--gray-500);font-size:13px;">1 week ago</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="company-cell">
+                    <div class="company-logo" style="background:#F0FFF4;">R</div>
+                    <div>
+                      <div class="company-name">Razorpay</div>
+                      <div class="company-role">Product Intern</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:81%;background:var(--teal);"></div></div>
+                    <div class="mini-bar-val">81%</div>
+                  </div>
+                </td>
+                <td><span class="status-badge s-shortlisted">✓ Shortlisted</span></td>
+                <td style="color:var(--gray-500);font-size:13px;">1 week ago</td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="company-cell">
+                    <div class="company-logo" style="background:#F5F3FF;">Z</div>
+                    <div>
+                      <div class="company-name">Zomato</div>
+                      <div class="company-role">Growth & Strategy Intern</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="mini-bar-wrap">
+                    <div class="mini-bar-bg"><div class="mini-bar-fill" style="width:55%;background:var(--purple);"></div></div>
+                    <div class="mini-bar-val">55%</div>
+                  </div>
+                </td>
+                <td><span class="status-badge s-applied">● Applied</span></td>
+                <td style="color:var(--gray-500);font-size:13px;">2 weeks ago</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Skill Gap Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🧠 Skill Gap Analysis</div>
+          <div class="card-action">Details →</div>
+        </div>
+        <div class="card-body">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:14px;">For <strong style="color:var(--gray-900);">Product Management</strong> internships</div>
+
+          <div class="skill-item">
+            <div class="skill-name">SQL</div>
+            <div class="skill-level">
+              <div class="skill-dot" style="background:var(--red);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+            </div>
+            <div class="skill-tag tag-critical">Critical</div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">Excel / Sheets</div>
+            <div class="skill-level">
+              <div class="skill-dot" style="background:var(--yellow);"></div>
+              <div class="skill-dot" style="background:var(--yellow);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+            </div>
+            <div class="skill-tag tag-improve">Improve</div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">Product Thinking</div>
+            <div class="skill-level">
+              <div class="skill-dot" style="background:var(--green);"></div>
+              <div class="skill-dot" style="background:var(--green);"></div>
+              <div class="skill-dot" style="background:var(--green);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+            </div>
+            <div class="skill-tag tag-good">Good</div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">Wireframing</div>
+            <div class="skill-level">
+              <div class="skill-dot" style="background:var(--green);"></div>
+              <div class="skill-dot" style="background:var(--green);"></div>
+              <div class="skill-dot" style="background:var(--green);"></div>
+              <div class="skill-dot" style="background:var(--green);"></div>
+            </div>
+            <div class="skill-tag tag-good">Strong</div>
+          </div>
+
+          <div class="skill-item">
+            <div class="skill-name">Market Research</div>
+            <div class="skill-level">
+              <div class="skill-dot" style="background:var(--yellow);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+              <div class="skill-dot" style="background:var(--gray-200);"></div>
+            </div>
+            <div class="skill-tag tag-improve">Improve</div>
+          </div>
+
+          <!-- Potential Score -->
+          <div style="margin-top:16px;padding:14px;background:var(--blue-xlight);border-radius:12px;border:1px solid var(--blue-light);">
+            <div style="font-size:12px;color:var(--blue);font-weight:600;margin-bottom:6px;">🚀 Your Potential Score</div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="flex:1;">
+                <div style="font-size:11px;color:var(--gray-500);margin-bottom:4px;">Current → After SQL + Excel</div>
+                <div style="height:8px;background:var(--gray-100);border-radius:99px;overflow:hidden;">
+                  <div style="width:85%;height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:99px;"></div>
+                </div>
+              </div>
+              <div style="font-size:18px;font-weight:800;color:var(--blue);">85%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="bottom-row">
+
+      <!-- Recommendations -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🎯 Personalized Recommendations</div>
+          <div class="card-action">See All →</div>
+        </div>
+        <div class="card-body">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">Based on your profile — you match these best</div>
+
+          <div class="rec-item">
+            <div class="rec-logo" style="background:#E8F4FD;">📱</div>
+            <div class="rec-info">
+              <div class="rec-title">Product Intern — Microsoft</div>
+              <div class="rec-meta">Remote · ₹20,000/mo · 3 months · 48 applicants</div>
+            </div>
+            <div class="rec-match">81% match</div>
+          </div>
+
+          <div class="rec-item">
+            <div class="rec-logo" style="background:#F0FFF4;">💳</div>
+            <div class="rec-info">
+              <div class="rec-title">Growth Intern — CRED</div>
+              <div class="rec-meta">Bangalore · ₹15,000/mo · 2 months · 120 applicants</div>
+            </div>
+            <div class="rec-match">76% match</div>
+          </div>
+
+          <div class="rec-item">
+            <div class="rec-logo" style="background:#FFF7ED;">🛒</div>
+            <div class="rec-info">
+              <div class="rec-title">Strategy Intern — Meesho</div>
+              <div class="rec-meta">Remote · ₹12,000/mo · 3 months · 67 applicants</div>
+            </div>
+            <div class="rec-match">71% match</div>
+          </div>
+
+          <div class="rec-item">
+            <div class="rec-logo" style="background:#F5F3FF;">🏦</div>
+            <div class="rec-info">
+              <div class="rec-title">PM Intern — Paytm</div>
+              <div class="rec-meta">Noida · ₹18,000/mo · 6 months · 92 applicants</div>
+            </div>
+            <div class="rec-match">68% match</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Suggested Courses -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📚 Suggested Courses</div>
+          <div class="card-action">Browse All →</div>
+        </div>
+        <div class="card-body">
+          <div style="font-size:13px;color:var(--gray-500);margin-bottom:4px;">Completing these could boost your score by +20 pts</div>
+
+          <div class="course-item">
+            <div class="course-icon" style="background:#E8F4FD;">🗄️</div>
+            <div>
+              <div class="course-title">SQL for Data Analysis</div>
+              <div class="course-meta">Internshala · 6 weeks · Free with certificate · ⭐ 4.8</div>
+              <div class="course-enroll">Enroll Now — Fixes Critical Gap ↗</div>
+            </div>
+          </div>
+
+          <div class="course-item">
+            <div class="course-icon" style="background:#F0FFF4;">📊</div>
+            <div>
+              <div class="course-title">Advanced Excel & Google Sheets</div>
+              <div class="course-meta">Internshala · 4 weeks · ₹799 · ⭐ 4.7</div>
+              <div class="course-enroll">Enroll Now ↗</div>
+            </div>
+          </div>
+
+          <div class="course-item">
+            <div class="course-icon" style="background:#FFF7ED;">🧩</div>
+            <div>
+              <div class="course-title">Product Management Foundations</div>
+              <div class="course-meta">Internshala · 8 weeks · ₹1,499 · ⭐ 4.9</div>
+              <div class="course-enroll">Enroll Now ↗</div>
+            </div>
+          </div>
+
+          <div class="course-item">
+            <div class="course-icon" style="background:#F5F3FF;">📈</div>
+            <div>
+              <div class="course-title">Market Research & Analysis</div>
+              <div class="course-meta">Internshala · 3 weeks · Free · ⭐ 4.6</div>
+              <div class="course-enroll">Enroll Now ↗</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

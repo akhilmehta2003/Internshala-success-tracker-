@@ -1,23 +1,26 @@
 # Internshala-success-tracker-
 
-💡 Feature Idea: Application Success Tracker
+🚀 Built an Internshala Success Tracker – My Product Management Case Study Project
 
-Problem:
-Students often apply to dozens of internships without understanding why they are not getting shortlisted.
+As part of my Product Management learning journey, I created an Internshala Success Tracker to analyze and track internship application performance.
 
-Solution:
-An AI-powered dashboard that provides:
+🔍 What the project covers:
+• Application tracking and management
+• Success rate analysis
+• Data-driven insights
+• User-focused dashboard design
+• Product thinking and decision-making
 
-📈 Application Success Score
+Through this project, I explored how data can help users make better decisions while improving their internship search experience.
 
-🧠 Skill Gap Analysis
+💡 Key skills applied:
+✅ Product Thinking
+✅ User Experience (UX)
+✅ Data Analysis
+✅ Problem Solving
+✅ Dashboard Design
 
-📄 Resume Strength Score
 
-🎯 Personalized internship recommendations
 
-📚 Suggested courses to improve eligibility
 
-Example:
 
-"Your profile matches 65% of the requirements for Product Management internships. Improving SQL and Excel skills could increase your match score to 85%."
